@@ -1,23 +1,20 @@
+import re
+
 class LindenmayerParse(object):
   def __init__(self, iterations, axiom, rules):
     self.iterations = iterations
     self.axiom = axiom
     self.rules = rules
 
+  def rule(self, match):
+    match = match.group()
+    if match in self.rules:
+        return self.rules[match]
+    else:
+        return match
+
   def iterate(self):
-    if self.axiom == None or not self.rules:
-      return
-    result = self.axiom
-    for repeat in range(0, self.iterations):
-      result = self.translate(result)
-    return result
-
-  def translate(self, axiom):
-    result = []
-    for i in axiom:
-      if i in self.rules:
-        result += self.rules[i]
-      else:
-        result += i
-
-    return result
+      iterated = self.axiom
+      for i in range(self.iterations):
+          iterated = re.sub(r'\w', self.rule, iterated)
+      return iterated

@@ -56,10 +56,7 @@ def main(argv):
   with open(inputFile, 'r') as fp:
     inputStream = fp.read()
     configs = json.loads(inputStream)
-    #outputDir = configs['output_dir']
     name = configs['name']
-
-  #outputFile = outputDir + name + '.svg'
 
   paths = [];
   for config in configs['path']:

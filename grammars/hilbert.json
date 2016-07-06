@@ -1,17 +1,23 @@
 {
   "name": "hilbert",
+  "iterations": 7,
+  "axiom": "L",
+  "rules": {
+    "L": "c+RF-LFL-FR+",
+    "R": "-LF+RFR+FL-"
+  },
   "path": [
     {
-      "iterations": 7,
       "angle": 90,
       "length": 5,
       "length_growth": 0,
-      "angle_growth": 0,
-      "axiom": "L",
-      "rules": {
-        "L": "c+RF-LFL-FR+",
-        "R": "-LF+RFR+FL-"
-      }
+      "angle_growth": 0
+    },
+    {
+      "angle": 90,
+      "length": 5,
+      "length_growth": 0,
+      "angle_growth": 0
     }
   ]
 }

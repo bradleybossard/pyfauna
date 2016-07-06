@@ -12,18 +12,6 @@
         "L": "c+RF-LFL-FR+",
         "R": "-LF+RFR+FL-"
       }
-    },
-    {
-      "iterations": 7,
-      "angle": 91,
-      "length": 5,
-      "length_growth": 0,
-      "angle_growth": 0,
-      "axiom": "L",
-      "rules": {
-        "L": "c+RF-LFL-FR+",
-        "R": "-LF+RFR+FL-"
-      }
     }
   ]
 }

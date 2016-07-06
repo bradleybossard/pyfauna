@@ -17,6 +17,32 @@ def printStreamDebug(stream):
     result += str(i)
   print result
 
+def processGrammar(configs):
+  paths = [];
+  for config in configs['path']:
+    lindenmayerParse = LindenmayerParse(config['iterations'], config['axiom'], config['rules'])
+
+    tSysStart = time()
+    stream = lindenmayerParse.iterate()
+    tSysEnd = time()
+    print '  ' + str((tSysEnd - tSysStart) * 1000) + 'ms to generate l-system.'
+
+    #printStreamDebug(stream)
+
+    tPathStart = time()
+    pathStack = PathStack(config['angle'],
+                          config['length'],
+                          config['length_growth'],
+                          config['angle_growth'],
+                          stream)
+    #TODO(bradleybossard): Rename this call
+    path = pathStack.toPaths()
+    tPathEnd = time()
+    paths.append(path)
+    print '  ' + str((tPathEnd - tPathStart) * 1000) + 'ms to construct path.'
+  return paths
+
+
 def main(argv):
   try:
     opts, args = getopt.getopt(argv, "hio:", ["help", "input=", "output="])
@@ -53,33 +79,13 @@ def main(argv):
     sys.exit(2)
 
   # Read the whole input file.
+  configs = {}
   with open(inputFile, 'r') as fp:
     inputStream = fp.read()
     configs = json.loads(inputStream)
     name = configs['name']
 
-  paths = [];
-  for config in configs['path']:
-    lindenmayerParse = LindenmayerParse(config['iterations'], config['axiom'], config['rules'])
-
-    tSysStart = time()
-    stream = lindenmayerParse.iterate()
-    tSysEnd = time()
-    print '  ' + str((tSysEnd - tSysStart) * 1000) + 'ms to generate l-system.'
-
-    #printStreamDebug(stream)
-
-    tPathStart = time()
-    pathStack = PathStack(config['angle'],
-                          config['length'],
-                          config['length_growth'],
-                          config['angle_growth'],
-                          stream)
-    #TODO(bradleybossard): Rename this call
-    path = pathStack.toPaths()
-    tPathEnd = time()
-    paths.append(path)
-    print '  ' + str((tPathEnd - tPathStart) * 1000) + 'ms to construct path.'
+  paths = processGrammar(configs)
 
   svgPathWriter = SvgPathWriter(name, paths)
   svgPath = svgPathWriter.render()
@@ -89,9 +95,8 @@ def main(argv):
   svgWriter = SvgWriter(svgPaths)
   svgElement = svgWriter.toSvg(name)
 
-  fp = open(outputFile, 'w')
-  fp.write(svgElement)
-  fp.close
+  with open(outputFile, 'w') as fp:
+    fp.write(svgElement)
   tEnd = time()
   print str((tEnd - tStart) * 1000) + 'ms to run program.'
 

@@ -1,6 +1,4 @@
-#!/usr/bin/python
 import math
-from operator import itemgetter
 
 class PathStack():
   def __init__(self, alpha, length, lengthGrowth, angleGrowth, stream):
@@ -11,29 +9,19 @@ class PathStack():
 
     self.stream = stream
     self.point = (0, 0)
+    self.angle = -90
     self.pathLength = 0;
     self.stack = []
     self.pointStack = []
 
   def toPaths(self):
-    paths = []
-
-    # Point north
-    self.angle = -90
-    point = (0,0)
-
     # Initial position of path
     self.pointStack.append({'command': 'M', 'point': (0, 0)})
 
-    # TODO(bradleybossard) : Get rid of stream terminology
-    for i in range(len(self.stream)):
-      c = self.stream[i]
-
+    for c in self.stream:
       if c == '<':
-        #self.angle -= self.angleGrowth
         self.alpha -= self.angleGrowth
       elif c == '>':
-        #self.angle += self.angleGrowth
         self.alpha += self.angleGrowth
       elif c == '(':
         self.lineLength -= self.lengthGrowth
@@ -66,7 +54,6 @@ class PathStack():
         self.angle *= -1
       elif c == '|':
         self.angle += 180
-      #print c, self.point
 
     return self.pointStack
 

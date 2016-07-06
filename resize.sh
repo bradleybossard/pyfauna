@@ -1,5 +1,5 @@
 directory="output"
-size=100
+size=70
 files=$(find $directory | grep svg | grep -v thumb)
 for file in $files; do 
   filename=$(basename $file)

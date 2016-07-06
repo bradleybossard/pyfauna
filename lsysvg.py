@@ -2,7 +2,6 @@ from lsysparse import LindenmayerParse
 from pathstack import PathStack
 from svgpathwriter import SvgPathWriter
 from svgwriter import SvgWriter
-from time import time
 
 import sys
 import getopt
@@ -38,8 +37,6 @@ def main(argv):
   except getopt.GetoptError as err:
     print err
     sys.exit(2)
-
-  tStart = time()
 
   inputFile = None
   outputFile = None
@@ -84,8 +81,6 @@ def main(argv):
 
   with open(outputFile, 'w') as fp:
     fp.write(svgElement)
-  tEnd = time()
-  print str((tEnd - tStart) * 1000) + 'ms to run program.'
 
 if __name__ == "__main__":
   main(sys.argv[1:])

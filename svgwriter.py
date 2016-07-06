@@ -35,11 +35,12 @@ class SvgWriter():
        xmlns="http://www.w3.org/2000/svg"\n \
        xmlns:xlink="http://www.w3.org/1999/xlink"\n \
        viewBox="0 0 ' + svgWidth + ' ' + svgHeight + '" \n \
+       width="' + svgWidth + '"\n \
+       height="' + svgHeight + '"\n \
        >\n';
-       #width="' + svgWidth + '"\n \
-       #height="' + svgHeight + '"\n \
        #viewBox="0 0 800 200" \n \
        #zoomAndPan="enable" \n \
+
 
     instance = '<use x="0" y="0" stroke="black" stroke-width="1" fill="none" xlink:href="#' + name + '" />\n'
 

@@ -19,29 +19,17 @@ def printStreamDebug(stream):
 
 def processGrammar(configs):
   paths = [];
+  lindenmayerParse = LindenmayerParse(configs['iterations'], configs['axiom'], configs['rules'])
+  stream = lindenmayerParse.iterate()
   for config in configs['path']:
-    lindenmayerParse = LindenmayerParse(config['iterations'], config['axiom'], config['rules'])
-
-    tSysStart = time()
-    stream = lindenmayerParse.iterate()
-    tSysEnd = time()
-    print '  ' + str((tSysEnd - tSysStart) * 1000) + 'ms to generate l-system.'
-
-    #printStreamDebug(stream)
-
-    tPathStart = time()
     pathStack = PathStack(config['angle'],
                           config['length'],
                           config['length_growth'],
                           config['angle_growth'],
                           stream)
-    #TODO(bradleybossard): Rename this call
     path = pathStack.toPaths()
-    tPathEnd = time()
     paths.append(path)
-    print '  ' + str((tPathEnd - tPathStart) * 1000) + 'ms to construct path.'
   return paths
-
 
 def main(argv):
   try:
@@ -56,7 +44,6 @@ def main(argv):
   inputFile = None
   outputFile = None
 
-  # TODO(bradleybossard) : Add option for toggling timing info on/off
   for o, a in opts:
     if o in ("-h", "--help"):
       usage()

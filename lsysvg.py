@@ -1,4 +1,4 @@
-from lsysparse import LindenmayerParse
+from lsysparse import lsystem
 from pathstack import PathStack
 from svgpathwriter import SvgPathWriter
 from svgwriter import SvgWriter
@@ -18,7 +18,7 @@ def printStreamDebug(stream):
 
 def processGrammar(configs):
   paths = [];
-  lindenmayerParse = LindenmayerParse(configs['iterations'], configs['axiom'], configs['rules'])
+  lindenmayerParse = lsystem(configs['iterations'], configs['axiom'], configs['rules'])
   stream = lindenmayerParse.iterate()
   for config in configs['path']:
     pathStack = PathStack(config['angle'],

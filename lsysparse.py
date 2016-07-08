@@ -1,6 +1,6 @@
 import re
 
-class LindenmayerParse(object):
+class lsystem(object):
   def __init__(self, iterations, axiom, rules):
     self.iterations = iterations
     self.axiom = axiom

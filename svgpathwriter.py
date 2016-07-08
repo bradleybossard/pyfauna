@@ -1,5 +1,5 @@
-#!/usr/bin/python
 from operator import itemgetter
+from lxml import etree
 
 class SvgPathWriter():
   def __init__(self, name, pointStacks):
@@ -7,15 +7,15 @@ class SvgPathWriter():
     self.pointStacks = pointStacks
 
   def createPathAnimationElement(self, toPath, fromPath, valuesPath):
-    output = '<animate attributeName = "d" begin="0s" dur="20s" \n'
-    output += 'from = "' + fromPath + '"\n'
-    output += 'to = "' + toPath + '"\n'
-    output += 'values = "' + valuesPath + '"\n'
-    #output += 'calcMode = "spline"\n'
-    #output += 'keySplines = "0.42 0 0.58 1"\n'
-    output += 'repeatCount="indefinite"\n'
-    output += '/>'
-    return output
+    root = etree.Element("animate")
+    root.set("attributeName", "d")
+    root.set("begin", "0s")
+    root.set("dur", "10s")
+    root.set("from", fromPath)
+    root.set("to", toPath)
+    root.set("values", valuesPath)
+    root.set("repeatCount", "indefinite")
+    return etree.tostring(root)
 
   def createStrokeAnimationElement(self, pathLength):
     output = '<animate id="dashanim1" \n \
@@ -76,7 +76,6 @@ class SvgPathWriter():
     pathData = ''
     for point in pointStack:
       pathData += point['command'] + ' ' + str(point['point'][0]) + ' ' + str(point['point'][1]) + '\n'
-      #print point['command'], point['point'][0], point['point'][1]
     return pathData
 
   def render(self):

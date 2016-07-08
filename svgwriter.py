@@ -6,18 +6,13 @@ class SvgWriter():
 
   # TODO(bradleybossard) : Rename to render, move name to initialization.
   def toSvg(self, name):
-    header = '<?xml version="1.0" standalone="no"?>\n \
-              <?xml-stylesheet href="svg.css" type="text/css"?>\n \
-              <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" \
-                "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
-
     xValues = []
     yValues = []
     for path in self.paths:
-      xValues.append(path['bbox'][0]) #minX
-      yValues.append(path['bbox'][1]) #minY
-      xValues.append(path['bbox'][2]) #maxX
-      yValues.append(path['bbox'][3]) #maxY
+      xValues.append(path['bbox'][0])
+      yValues.append(path['bbox'][1])
+      xValues.append(path['bbox'][2])
+      yValues.append(path['bbox'][3])
 
     minX = min(xValues)
     maxX = max(xValues)
@@ -40,7 +35,6 @@ class SvgWriter():
        >\n';
        #viewBox="0 0 800 200" \n \
        #zoomAndPan="enable" \n \
-
 
     instance = '<use x="0" y="0" stroke="black" stroke-width="1" fill="none" xlink:href="#' + name + '" />\n'
 

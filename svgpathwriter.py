@@ -15,7 +15,6 @@ class SvgPathWriter():
     root.set("to", toPath)
     root.set("values", valuesPath)
     root.set("repeatCount", "indefinite")
-    #return etree.tostring(root)
     return root
 
   def createStrokeAnimationElement(self, pathLength):
@@ -36,7 +35,7 @@ class SvgPathWriter():
     root.set("d", path)
     for element in animationElements:
         root.append(element)
-    return etree.tostring(root)
+    return root
 
   """
   def createStyleElement(self, styleStream, pathLength):

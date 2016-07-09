@@ -1,4 +1,4 @@
-#!/usr/bin/python
+from lxml import etree
 
 class SvgWriter():
   def __init__(self, paths):
@@ -22,24 +22,32 @@ class SvgWriter():
     svgWidth = str(abs(maxX - minX))
     svgHeight = str(abs(maxY - minY))
 
-    output = '<svg\n \
-       xmlns:dc="http://purl.org/dc/elements/1.1/"\n \
-       xmlns:cc="http://creativecommons.org/ns#"\n \
-       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n \
-       xmlns:svg="http://www.w3.org/2000/svg"\n \
-       xmlns="http://www.w3.org/2000/svg"\n \
-       xmlns:xlink="http://www.w3.org/1999/xlink"\n \
-       viewBox="0 0 ' + svgWidth + ' ' + svgHeight + '" \n \
-       width="' + svgWidth + '"\n \
-       height="' + svgHeight + '"\n \
-       >\n';
-       #viewBox="0 0 800 200" \n \
-       #zoomAndPan="enable" \n \
+    xlink_url = "http://www.w3.org/1999/xlink"
 
-    instance = '<use x="0" y="0" stroke="black" stroke-width="1" fill="none" xlink:href="#' + name + '" />\n'
+    NSMAP = {"dc" : "http://purl.org/dc/elements/1.1",
+             "xlink" : xlink_url,
+             "dc": "http://purl.org/dc/elements/1.1/",
+             "cc": "http://creativecommons.org/ns#",
+             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+             None: "http://www.w3.org/2000/svg",
+             "svg": "http://www.w3.org/2000/svg"}
 
-    output += instance
-    output += '<defs>\n' + self.paths[0]['path'] + '</defs>\n'
+    root = etree.Element("svg", nsmap=NSMAP)
+    root.set("viewBox", "0 0 " + svgWidth + " " + svgHeight)
+    root.set("width", svgWidth)
+    root.set("height", svgHeight)
 
-    output += '</svg>\n'
-    return output
+    instance = etree.Element("use")
+    instance.set("x", "0")
+    instance.set("y", "0")
+    instance.set("stroke", "black")
+    instance.set("stroke-width", "1")
+    instance.set("fill", "none")
+    instance.set("{%s}href" % xlink_url, "#" + name)
+
+    root.append(instance)
+    defs = etree.Element("defs")
+    defs.append(self.paths[0]["path"])
+    root.append(defs)
+
+    return etree.tostring(root)

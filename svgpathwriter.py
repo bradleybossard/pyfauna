@@ -15,7 +15,8 @@ class SvgPathWriter():
     root.set("to", toPath)
     root.set("values", valuesPath)
     root.set("repeatCount", "indefinite")
-    return etree.tostring(root)
+    #return etree.tostring(root)
+    return root
 
   def createStrokeAnimationElement(self, pathLength):
     output = '<animate id="dashanim1" \n \
@@ -28,16 +29,14 @@ class SvgPathWriter():
     return output
 
   def createPathElement(self, path, minX, minY, animationElements):
-    output = '<path \n';
-    output += '  id="' + self.name + '"\n \
-            transform="translate(' + str(minX * -1) + ',' +  str(minY * -1) + ')"\n \
-            class=""\n '
-    output += 'd="' + path + '"\n'
-    output += '>\n'
+    root = etree.Element("path")
+    root.set("id", self.name)
+    root.set("transform", "translate(" + str(minX * -1) + "," +  str(minY * -1) + ")")
+    root.set("class", "")
+    root.set("d", path)
     for element in animationElements:
-      output += element
-    output += '</path>\n'
-    return output
+        root.append(element)
+    return etree.tostring(root)
 
   """
   def createStyleElement(self, styleStream, pathLength):

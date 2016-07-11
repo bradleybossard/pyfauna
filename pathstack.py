@@ -14,9 +14,12 @@ class PathStack():
     self.stack = []
     self.pointStack = []
 
+  def createCommand(self, command, x, y):
+    return {'command': command, 'point': (x, y)}
+
   def toPaths(self):
     # Initial position of path
-    self.pointStack.append({'command': 'M', 'point': (0, 0)})
+    self.pointStack.append(self.createCommand('M', 0, 0))
 
     for c in self.stream:
       if c == '<':
@@ -33,10 +36,8 @@ class PathStack():
         deltaX = deltaX if abs(deltaX) > 0.000001 else 0
         deltaY = self.lineLength * math.sin(math.radians(self.angle))
         deltaY = deltaY if abs(deltaY) > 0.000001 else 0
-        self.pointStack.append({'command': 'l', 'point':(deltaX, deltaY)})
-        #print self.lineLength, self.angle, deltaX, deltaY
+        self.pointStack.append(self.createCommand('l', deltaX, deltaY))
         self.point = (self.point[0] + deltaX, self.point[1] + deltaY)
-        # TODO(bradleybossard) : t does a curving paths, need to explore more.
       elif c == '+':
         # rotate clockwise
         self.angle += self.alpha;
@@ -49,7 +50,7 @@ class PathStack():
       elif c == ']':
         # restore the transform and orientation from the stack
         self.angle, self.point = self.stack.pop()
-        self.pointStack.append({'command': 'M', 'point': self.point})
+        self.pointStack.append(self.createCommand('M', self.point.x, self.point.y))
       elif c == '!':
         self.angle *= -1
       elif c == '|':

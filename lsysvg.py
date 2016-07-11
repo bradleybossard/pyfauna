@@ -16,12 +16,12 @@ def processGrammar(configs):
   stream = lindenmayerParse.iterate()
   name = configs['name']
   for config in configs['path']:
-    pathStack = PathStack(config['angle'],
+    pathStack = PathStack()
+    path = pathStack.toPaths(config['angle'],
                           config['length'],
                           config['length_growth'],
                           config['angle_growth'],
                           stream)
-    path = pathStack.toPaths()
     paths.append(path)
 
   svgPathWriter = SvgPathWriter(name, paths)

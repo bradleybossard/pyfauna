@@ -10,16 +10,11 @@ import json
 def usage():
   print "lsysvg -input input_filename -output output_filename"
 
-def printStreamDebug(stream):
-  result = ''
-  for i in stream:
-    result += str(i)
-  print result
-
 def processGrammar(configs):
   paths = [];
   lindenmayerParse = lsystem(configs['iterations'], configs['axiom'], configs['rules'])
   stream = lindenmayerParse.iterate()
+  name = configs['name']
   for config in configs['path']:
     pathStack = PathStack(config['angle'],
                           config['length'],
@@ -28,7 +23,15 @@ def processGrammar(configs):
                           stream)
     path = pathStack.toPaths()
     paths.append(path)
-  return paths
+
+  svgPathWriter = SvgPathWriter(name, paths)
+  svgPath = svgPathWriter.render()
+  svgPaths = []
+  svgPaths.append(svgPath)
+
+  svgWriter = SvgWriter(svgPaths)
+  svgElement = svgWriter.toSvg(name)
+  return svgElement
 
 def main(argv):
   try:
@@ -67,20 +70,11 @@ def main(argv):
   with open(inputFile, 'r') as fp:
     inputStream = fp.read()
     configs = json.loads(inputStream)
-    name = configs['name']
 
-  paths = processGrammar(configs)
-
-  svgPathWriter = SvgPathWriter(name, paths)
-  svgPath = svgPathWriter.render()
-  svgPaths = []
-  svgPaths.append(svgPath)
-
-  svgWriter = SvgWriter(svgPaths)
-  svgElement = svgWriter.toSvg(name)
+  svgString = processGrammar(configs)
 
   with open(outputFile, 'w') as fp:
-    fp.write(svgElement)
+    fp.write(svgString)
 
 if __name__ == "__main__":
   main(sys.argv[1:])

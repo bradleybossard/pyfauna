@@ -35,7 +35,7 @@ class SvgPathWriter():
   def createPathElement(self, path, minX, minY, animationElements):
     root = etree.Element("path")
     root.set("id", self.name)
-    root.set("transform", "translate(" + str(minX * -1) + "," +  str(minY * -1) + ")")
+    root.set("transform", "translate(%f, %f)" % (-minX, -minY))
     root.set("class", "aqua")
     root.set("d", path)
     for element in animationElements:
@@ -44,29 +44,25 @@ class SvgPathWriter():
 
   # TODO(bradleybossard) : Might need to calculate the path length here as well.
   def calcBoundingBox(self, stack):
-    currentPoint = (0, 0)
-    points = []
+    cur_x = cur_y = 0
+    x = []
+    y = []
     for point in stack:
       if point['command'] == 'M':
-        currentPoint = point['point']
-        points.append(currentPoint)
+        x.append(point['x'])
+        y.append(point['y'])
       elif point['command'] == 'l':
-        currentPoint = (currentPoint[0] + point['point'][0], currentPoint[1] + point['point'][1])
-        points.append(currentPoint)
-
-    xValues = map(itemgetter(0), points)
-    yValues = map(itemgetter(1), points)
-    minX = min(xValues)
-    maxX = max(xValues)
-    minY = min(yValues)
-    maxY = max(yValues)
-    return (minX, minY, maxX, maxY)
+        cur_x += point['x']
+        cur_y += point['y']
+        x.append(cur_x)
+        y.append(cur_y)
+    return (min(x), min(y), max(x), max(y))
 
   def renderPathData(self, pointStack):
-    pathData = ''
+    pathData = []
     for point in pointStack:
-      pathData += point['command'] + ' ' + str(point['point'][0]) + ' ' + str(point['point'][1]) + '\n'
-    return pathData
+      pathData.append("%s %f %f\n" % (point['command'], point['x'], point['y']))
+    return ''.join(pathData)
 
   def render(self):
     animationElements = []

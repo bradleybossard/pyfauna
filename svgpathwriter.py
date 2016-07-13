@@ -18,37 +18,29 @@ class SvgPathWriter():
     return root
 
   def createStrokeAnimationElement(self, pathLength):
-    output = '<animate id="dashanim1" \n \
-             attributeName="stroke-dashoffset" \n \
-             from="' + str(pathLength) + '" to="0" dur="10s" begin="0s" \n \
-             repeatCount="indefinite" \
-             fill="freeze"\n \
-             keysplines="0 0.5 0.5 1" \
-             calcmode="spline"/>\n'
-    return output
+    root = etree.Element("animate")
+    root.set("id", "dashanim1")
+    root.set("attributeName", "stroke-dashoffset")
+    root.set("begin", "0s")
+    root.set("dur", "10s")
+    #root.set("from", str(pathLength))
+    root.set("from", "200.0")
+    root.set("to", "0")
+    root.set("fill", "freeze")
+    root.set("keysplines", "0 0.5 0.5 1")
+    root.set("calcmode", "spline")
+    root.set("repeatCount", "indefinite")
+    return root
 
   def createPathElement(self, path, minX, minY, animationElements):
     root = etree.Element("path")
     root.set("id", self.name)
     root.set("transform", "translate(" + str(minX * -1) + "," +  str(minY * -1) + ")")
-    root.set("class", "")
+    root.set("class", "aqua")
     root.set("d", path)
     for element in animationElements:
         root.append(element)
     return root
-
-  """
-  def createStyleElement(self, styleStream, pathLength):
-    # TODO(bradleybossard): Encapsulate this into a function
-    animateStroke = True
-    output = ''
-    #strokeLength = str(pathLength * 0.001)
-    strokeLength = str(pathLength)
-    animateStyle = '  stroke-dasharray: ' + strokeLength + ' ' + strokeLength + ';\n'
-    animateStyle += '  stroke-dashoffset: 0;\n'
-    #output = '<style>.aqua{' + styleStream + animateStyle + '}</style>'
-    return output
-  """
 
   # TODO(bradleybossard) : Might need to calculate the path length here as well.
   def calcBoundingBox(self, stack):
@@ -79,10 +71,12 @@ class SvgPathWriter():
   def render(self):
     animationElements = []
     fromPath = self.renderPathData(self.pointStacks[0])
-    if(len(self.pointStacks) > 1):
+    if(True):
+      pathLength = 1.0
       toPath = self.renderPathData(self.pointStacks[1])
       valuesPath = fromPath + ';' +  toPath + ';' + fromPath + ';'
       animationElements.append(self.createPathAnimationElement(fromPath, fromPath, valuesPath))
+      animationElements.append(self.createStrokeAnimationElement(pathLength))
 
     boundingBox = self.calcBoundingBox(self.pointStacks[0])
 

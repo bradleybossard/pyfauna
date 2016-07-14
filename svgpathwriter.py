@@ -1,5 +1,7 @@
 from operator import itemgetter
 from lxml import etree
+from math import sqrt
+import random
 
 class SvgPathWriter():
   def __init__(self, name, pointStacks):
@@ -14,21 +16,6 @@ class SvgPathWriter():
     root.set("from", fromPath)
     root.set("to", toPath)
     root.set("values", valuesPath)
-    root.set("repeatCount", "indefinite")
-    return root
-
-  def createStrokeAnimationElement(self, pathLength):
-    root = etree.Element("animate")
-    root.set("id", "dashanim1")
-    root.set("attributeName", "stroke-dashoffset")
-    root.set("begin", "0s")
-    root.set("dur", "10s")
-    #root.set("from", str(pathLength))
-    root.set("from", "200.0")
-    root.set("to", "0")
-    root.set("fill", "freeze")
-    root.set("keysplines", "0 0.5 0.5 1")
-    root.set("calcmode", "spline")
     root.set("repeatCount", "indefinite")
     return root
 
@@ -58,6 +45,15 @@ class SvgPathWriter():
         y.append(cur_y)
     return (min(x), min(y), max(x), max(y))
 
+  def calcPathLength(self, stack):
+    length = 0.0
+    for point in stack:
+      if point['command'] == 'l':
+        x = point['x']
+        y = point['y']
+        length += sqrt((x * x) + (y * y))
+    return length
+
   def renderPathData(self, pointStack):
     pathData = []
     for point in pointStack:
@@ -67,12 +63,12 @@ class SvgPathWriter():
   def render(self):
     animationElements = []
     fromPath = self.renderPathData(self.pointStacks[0])
-    if(True):
-      pathLength = 1.0
-      toPath = self.renderPathData(self.pointStacks[1])
-      valuesPath = fromPath + ';' +  toPath + ';' + fromPath + ';'
-      animationElements.append(self.createPathAnimationElement(fromPath, fromPath, valuesPath))
-      animationElements.append(self.createStrokeAnimationElement(pathLength))
+    boundingBox = self.calcBoundingBox(self.pointStacks[0])
+    pathLength = self.calcPathLength(self.pointStacks[0])
+    #random.shuffle(self.pointStacks[1])
+    toPath = self.renderPathData(self.pointStacks[1])
+    valuesPath = fromPath + ';' +  toPath + ';' + fromPath + ';'
+    animationElements.append(self.createPathAnimationElement(fromPath, fromPath, valuesPath))
 
     boundingBox = self.calcBoundingBox(self.pointStacks[0])
 

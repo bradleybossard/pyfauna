@@ -57,7 +57,7 @@ class SvgPathWriter():
   def renderPathData(self, pointStack):
     pathData = []
     for point in pointStack:
-      pathData.append("%s %f %f\n" % (point['command'], point['x'], point['y']))
+      pathData.append("%s %f %f " % (point['command'], point['x'], point['y']))
     return ''.join(pathData)
 
   def shufflePath(self, pointStack):
@@ -85,11 +85,8 @@ class SvgPathWriter():
     fromPath = self.renderPathData(self.pointStacks[0])
     boundingBox = self.calcBoundingBox(self.pointStacks[0])
     pathLength = self.calcPathLength(self.pointStacks[0])
-    #random.shuffle(self.pointStacks[1])
     #toPath = self.renderPathData(self.pointStacks[1])
     toPath = self.renderPathData(self.shufflePath(self.pointStacks[1]))
-    #shuffled = self.shufflePath(self.pointStacks[1])
-    #toPath = self.renderPathData(shuffled)
     valuesPath = fromPath + ';' +  toPath + ';' + fromPath + ';'
     animationElements.append(self.createPathAnimationElement(fromPath, fromPath, valuesPath))
 
@@ -97,4 +94,4 @@ class SvgPathWriter():
 
     pathSvg = self.createPathElement(fromPath, boundingBox[0], boundingBox[1], animationElements)
 
-    return {'path': pathSvg, 'bbox': boundingBox}
+    return {'path': pathSvg, 'bbox': boundingBox, 'length': pathLength}

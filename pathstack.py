@@ -48,7 +48,7 @@ class PathStack():
       elif c == ']':
         # restore the transform and orientation from the stack
         angle, point = stack.pop()
-        pointStack.append(self.createCommand('M', point.x, point.y))
+        pointStack.append(self.createCommand('M', point[0], point[1]))
       elif c == '!':
         angle *= -1
       elif c == '|':

@@ -7,6 +7,7 @@ class SvgWriter():
 
   def createStyleElement(self):
     fill = '#00FF00'
+    fill_opacity = '0.2'
     stroke = '#FF0000'
     stroke_width = '1px'
     stroke_dash = '200.0'
@@ -14,20 +15,27 @@ class SvgWriter():
     stroke_linejoin = 'miter'
     stroke_width = '1px'
     stroke_opacity = '0.8'
-    stroke_dash_length = '200.0'
+    stroke_dash_length = '1000.0'
     stroke_dash_offset = '0.0'
     style = etree.Element("style")
     attributes = [];
     attributes.append("fill: %s;" % fill)
+    attributes.append("fill-opacity: %s;" % fill_opacity)
     attributes.append("stroke: %s;" % stroke)
     attributes.append("stroke-linecap: %s;" % stroke_linecap)
     attributes.append("stroke-linejoin: %s;" % stroke_linejoin)
     attributes.append("stroke-width: %s;" % stroke_width)
     attributes.append("stroke-opacity : %s;" % stroke_opacity)
-    attributes.append("stroke-dasharray: %s %s;" % (stroke_dash_length, stroke_dash_length))
-    attributes.append("stroke-dashoffset: %s" % stroke_dash_offset)
+    #attributes.append("stroke-dasharray: %s %s;" % (stroke_dash_length, stroke_dash_length))
+    attributes.append("stroke-dasharray: 1000 12000 2000 100 1000;")
+    attributes.append("stroke-dashoffset: %s;" % stroke_dash_offset)
+    #attributes.append("transition: stroke-dashoffset 8s linear;")
+    attributes.append("animation: draw 3s alternate infinite;")
+
     # TODO: Add classname
     class_def = ".aqua { %s }" % ''.join(attributes)
+    #class_def += " @keyframes draw { 50% { stroke-dashoffset: 0; } }"
+    class_def += " @keyframes draw { from { stroke-dashoffset: %s; } to { stroke-dashoffset: 0; } }" % stroke_dash_length
     style.text = class_def
     return style
 

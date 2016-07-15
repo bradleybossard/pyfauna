@@ -60,13 +60,36 @@ class SvgPathWriter():
       pathData.append("%s %f %f\n" % (point['command'], point['x'], point['y']))
     return ''.join(pathData)
 
+  def shufflePath(self, pointStack):
+      head = None
+      tail = []
+      final = []
+      for point in pointStack:
+          if point['command'] == 'M':
+              if head != None:
+                  final.append(head)
+                  random.shuffle(tail)
+                  final.extend(tail)
+                  tail = []
+              head = point
+          else:
+              tail.append(point)
+
+      final.append(head)
+      random.shuffle(tail)
+      final.extend(tail)
+      return final
+
   def render(self):
     animationElements = []
     fromPath = self.renderPathData(self.pointStacks[0])
     boundingBox = self.calcBoundingBox(self.pointStacks[0])
     pathLength = self.calcPathLength(self.pointStacks[0])
     #random.shuffle(self.pointStacks[1])
-    toPath = self.renderPathData(self.pointStacks[1])
+    #toPath = self.renderPathData(self.pointStacks[1])
+    toPath = self.renderPathData(self.shufflePath(self.pointStacks[1]))
+    #shuffled = self.shufflePath(self.pointStacks[1])
+    #toPath = self.renderPathData(shuffled)
     valuesPath = fromPath + ';' +  toPath + ';' + fromPath + ';'
     animationElements.append(self.createPathAnimationElement(fromPath, fromPath, valuesPath))
 

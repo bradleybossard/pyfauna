@@ -5,7 +5,6 @@ class PathStack():
       pass
 
   def createCommand(self, command, x, y):
-    #return {'command': command, 'point': (x, y)}
     return {'command': command, 'x': x, 'y': y}
 
   def toPaths(self, alpha, length, lengthGrowth, angleGrowth, stream):

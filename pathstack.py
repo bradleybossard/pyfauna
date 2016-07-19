@@ -2,7 +2,7 @@ import math
 
 class PathStack():
   def __init__(self):
-      pass
+    self.precision = 5
 
   def createCommand(self, command, x, y):
     return {'command': command, 'x': x, 'y': y}
@@ -29,12 +29,10 @@ class PathStack():
         lineLength += lengthGrowth
       elif c == 'F':
         # Move forward
-        deltaX = lineLength * math.cos(math.radians(angle))
-        deltaX = deltaX if abs(deltaX) > 0.000001 else 0
-        deltaY = lineLength * math.sin(math.radians(angle))
-        deltaY = deltaY if abs(deltaY) > 0.000001 else 0
+        deltaX = round(lineLength * math.cos(math.radians(angle)), self.precision)
+        deltaY = round(lineLength * math.sin(math.radians(angle)), self.precision)
         pointStack.append(self.createCommand('l', deltaX, deltaY))
-        point = (point[0] + deltaX, point[1] + deltaY)
+        point = (round(point[0] + deltaX, self.precision), round(point[1] + deltaY, self.precision))
       elif c == '+':
         # rotate clockwise
         angle += alpha;

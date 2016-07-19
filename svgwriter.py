@@ -5,38 +5,39 @@ class SvgWriter():
     self.paths = paths
 
   def createStyleElement(self, classname, stroke_dash_length):
-    fill = '#00FF00'
+    fill = '#996300'
     fill_opacity = '0.2'
-    stroke = '#FF0000'
+    stroke = '#FFA500'
     stroke_width = '1px'
     stroke_dash = '200.0'
     stroke_linecap = 'butt'
     stroke_linejoin = 'miter'
     stroke_width = '1px'
     stroke_opacity = '0.8'
-    #stroke_dash_length = '1000.0'
     stroke_dash_offset = '0.0'
     style = etree.Element("style")
     attributes = [];
-    attributes.append("fill: %s;" % fill)
+    #attributes.append("fill: %s;" % fill)
     attributes.append("fill-opacity: %s;" % fill_opacity)
     attributes.append("stroke: %s;" % stroke)
     attributes.append("stroke-linecap: %s;" % stroke_linecap)
     attributes.append("stroke-linejoin: %s;" % stroke_linejoin)
     attributes.append("stroke-width: %s;" % stroke_width)
     attributes.append("stroke-opacity : %s;" % stroke_opacity)
-    attributes.append("stroke-dasharray: %s %s;" % (stroke_dash_length, stroke_dash_length))
+    dash_length = stroke_dash_length / 2
+    attributes.append("stroke-dasharray: %f %f;" % (dash_length, dash_length))
     #attributes.append("stroke-dasharray: 1000 12000 2000 100 1000;")
     #attributes.append("stroke-dasharray: 50%;")
     #attributes.append("stroke-dasharray: 100;")
     attributes.append("stroke-dashoffset: %s;" % stroke_dash_offset)
     #attributes.append("transition: stroke-dashoffset 8s linear;")
-    attributes.append("animation: draw 3s alternate infinite;")
+    attributes.append("animation: draw 15s alternate infinite;")
+    attributes.append("animation: color 5s alternate infinite;")
 
     # TODO: Add classname
     class_def = ".%s { %s }" % (classname, ''.join(attributes))
-    #class_def += " @keyframes draw { 50% { stroke-dashoffset: 0; } }"
     class_def += " @keyframes draw { from { stroke-dashoffset: %s; } to { stroke-dashoffset: 0; } }" % stroke_dash_length
+    class_def += " @keyframes color { from { fill: %s; } to { fill: %s; } }" % ('#FF0000', '#00FF00')
     style.text = class_def
     return style
 
@@ -46,6 +47,8 @@ class SvgWriter():
     xValues = []
     yValues = []
     for path in self.paths:
+      print path['length']
+      print path['bbox']
       xValues.append(path['bbox'][0])
       yValues.append(path['bbox'][1])
       xValues.append(path['bbox'][2])
@@ -56,8 +59,8 @@ class SvgWriter():
     minY = min(yValues)
     maxY = max(yValues)
 
-    svgWidth = str(abs(maxX - minX))
-    svgHeight = str(abs(maxY - minY))
+    svgWidth = abs(maxX - minX)
+    svgHeight = abs(maxY - minY)
 
     xlink_url = "http://www.w3.org/1999/xlink"
 
@@ -70,11 +73,14 @@ class SvgWriter():
              "svg": "http://www.w3.org/2000/svg"}
 
     root = etree.Element("svg", nsmap=NSMAP)
-    root.set("viewBox", "0 0 " + svgWidth + " " + svgHeight)
-    root.set("width", svgWidth)
-    root.set("height", svgHeight)
+    root.set("viewBox", "%f %f %f %f" % (0, 0, svgWidth, svgHeight))
+    #root.set("viewBox", "%f %f %f %f" % (minX, minY, maxX, maxY))
+    #root.set("viewBox", "%f %f %f %f" % (-svgWidth, -svgHeight, svgWidth, svgHeight))
+    root.set("width", str(svgWidth))
+    root.set("height", str(svgHeight))
 
-    style = self.createStyleElement('aqua', 200)
+    path_length = self.paths[0]["length"]
+    style = self.createStyleElement('aqua', path_length)
     root.append(style)
 
     instance = etree.Element("use")

@@ -15,6 +15,7 @@ class SvgWriter():
     stroke_width = '1px'
     stroke_opacity = '0.8'
     stroke_dash_offset = '0.0'
+    dash_length = stroke_dash_length / 10
     style = etree.Element("style")
     attributes = [];
     #attributes.append("fill: %s;" % fill)
@@ -24,20 +25,22 @@ class SvgWriter():
     attributes.append("stroke-linejoin: %s;" % stroke_linejoin)
     attributes.append("stroke-width: %s;" % stroke_width)
     attributes.append("stroke-opacity : %s;" % stroke_opacity)
-    dash_length = stroke_dash_length / 2
     attributes.append("stroke-dasharray: %f %f;" % (dash_length, dash_length))
     #attributes.append("stroke-dasharray: 1000 12000 2000 100 1000;")
     #attributes.append("stroke-dasharray: 50%;")
     #attributes.append("stroke-dasharray: 100;")
     attributes.append("stroke-dashoffset: %s;" % stroke_dash_offset)
+    #attributes.append("stroke-dashoffset: %s;" % stroke_dash_length)
     #attributes.append("transition: stroke-dashoffset 8s linear;")
-    attributes.append("animation: draw 15s alternate infinite;")
-    attributes.append("animation: color 5s alternate infinite;")
+    animations = []
+    animations.append("draw 5s ease-in alternate infinite")
+    animations.append("fillcolor 3s ease-in alternate infinite")
+    attributes.append("animation: %s;" % ', '.join(animations))
 
     # TODO: Add classname
     class_def = ".%s { %s }" % (classname, ''.join(attributes))
     class_def += " @keyframes draw { from { stroke-dashoffset: %s; } to { stroke-dashoffset: 0; } }" % stroke_dash_length
-    class_def += " @keyframes color { from { fill: %s; } to { fill: %s; } }" % ('#FF0000', '#00FF00')
+    class_def += " @keyframes fillcolor { from { fill: %s; } to { fill: %s; } }" % ('#cccc00', '#00cc00')
     style.text = class_def
     return style
 

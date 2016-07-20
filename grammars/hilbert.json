@@ -1,9 +1,9 @@
 {
   "name": "hilbert",
-  "iterations": 7,
+  "iterations": 6,
   "axiom": "L",
   "rules": {
-    "L": "c+RF-LFL-FR+",
+    "L": "c+R[]F-L[]FL-FR+",
     "R": "-LF+RFR+FL-"
   },
   "path": [
@@ -14,7 +14,7 @@
       "angle_growth": 0
     },
     {
-      "angle": 89.8,
+      "angle": 87.2,
       "length": 5,
       "length_growth": 0,
       "angle_growth": 0

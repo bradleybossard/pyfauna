@@ -8,11 +8,10 @@ class SvgWriter():
     fill = '#996300'
     fill_opacity = '0.2'
     stroke = '#FFA500'
-    stroke_width = '1px'
     stroke_dash = '200.0'
     stroke_linecap = 'butt'
     stroke_linejoin = 'miter'
-    stroke_width = '1px'
+    stroke_width = '4px'
     stroke_opacity = '0.8'
     stroke_dash_offset = '0.0'
     dash_length = stroke_dash_length / 10
@@ -35,12 +34,14 @@ class SvgWriter():
     animations = []
     animations.append("draw 5s ease-in alternate infinite")
     animations.append("fillcolor 3s ease-in alternate infinite")
+    animations.append("strokecolor 3s ease-in alternate infinite")
     attributes.append("animation: %s;" % ', '.join(animations))
 
     # TODO: Add classname
     class_def = ".%s { %s }" % (classname, ''.join(attributes))
     class_def += " @keyframes draw { from { stroke-dashoffset: %s; } to { stroke-dashoffset: 0; } }" % stroke_dash_length
     class_def += " @keyframes fillcolor { from { fill: %s; } to { fill: %s; } }" % ('#cccc00', '#00cc00')
+    class_def += " @keyframes strokecolor { from { stroke: %s; } to { stroke: %s; } }" % ('#cc0000', '#0000cc')
     style.text = class_def
     return style
 

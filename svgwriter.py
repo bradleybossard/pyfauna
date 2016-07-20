@@ -32,16 +32,16 @@ class SvgWriter():
     #attributes.append("stroke-dashoffset: %s;" % stroke_dash_length)
     #attributes.append("transition: stroke-dashoffset 8s linear;")
     animations = []
-    animations.append("draw 5s ease-in alternate infinite")
-    animations.append("fillcolor 3s ease-in alternate infinite")
-    animations.append("strokecolor 3s ease-in alternate infinite")
+    animations.append("%s-stroke-dashoffset 5s ease-in alternate infinite" % classname)
+    animations.append("%s-fill 3s ease-in alternate infinite" % classname)
+    animations.append("%s-stroke 3s ease-in alternate infinite" % classname)
     attributes.append("animation: %s;" % ', '.join(animations))
 
-    # TODO: Add classname
+    # TODO: Add  prefix for each animation
     class_def = ".%s { %s }" % (classname, ''.join(attributes))
-    class_def += " @keyframes draw { from { stroke-dashoffset: %s; } to { stroke-dashoffset: 0; } }" % stroke_dash_length
-    class_def += " @keyframes fillcolor { from { fill: %s; } to { fill: %s; } }" % ('#cccc00', '#00cc00')
-    class_def += " @keyframes strokecolor { from { stroke: %s; } to { stroke: %s; } }" % ('#cc0000', '#0000cc')
+    class_def += " @keyframes %s-stroke-dashoffset { from { stroke-dashoffset: %s; } to { stroke-dashoffset: 0; } }" % (classname, stroke_dash_length)
+    class_def += " @keyframes %s-fill { from { fill: %s; } to { fill: %s; } }" % (classname, '#cccc00', '#00cc00')
+    class_def += " @keyframes %s-stroke { from { stroke: %s; } to { stroke: %s; } }" % (classname, '#cc0000', '#0000cc')
     style.text = class_def
     return style
 

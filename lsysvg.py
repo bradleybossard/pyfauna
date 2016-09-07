@@ -24,8 +24,8 @@ def process_grammar(configs):
                                   config['angle_growth'], stream)
         paths.append(path)
 
-    svgPathWriter = SvgPathWriter(name, paths)
-    svgPath = svgPathWriter.render()
+    svg_path_writer = SvgPathWriter(name, paths)
+    svgPath = svg_path_writer.render()
     svgPaths = []
     svgPaths.append(svgPath)
 
@@ -67,14 +67,14 @@ def main(argv):
 
     # Read the whole input file.
     configs = {}
-    with open(input_file, 'r') as file:
-        input_stream = file.read()
+    with open(input_file, 'r') as fp:
+        input_stream = fp.read()
         configs = json.loads(input_stream)
 
         svg_string = process_grammar(configs)
 
-    with open(output_file, 'w') as file:
-        file.write(svg_string)
+    with open(output_file, 'w') as fp:
+        fp.write(svg_string)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

@@ -1,12 +1,13 @@
+import sys
+import getopt
+import json
+#import pprint
+
 from lsysparse import lsystem
 from pathstack import PathStack
 from svgpathwriter import SvgPathWriter
 from svgwriter import SvgWriter
 
-import sys
-import getopt
-import json
-#import pprint
 
 def usage():
     print "lsysvg -input input_filename -output output_filename"

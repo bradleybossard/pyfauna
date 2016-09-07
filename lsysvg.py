@@ -6,11 +6,13 @@ from svgwriter import SvgWriter
 import sys
 import getopt
 import json
+import pprint
 
 def usage():
   print "lsysvg -input input_filename -output output_filename"
 
 def processGrammar(configs):
+  pp = pprint.PrettyPrinter(indent=4)
   paths = [];
   lindenmayerParse = lsystem(configs['iterations'], configs['axiom'], configs['rules'])
   stream = lindenmayerParse.iterate()

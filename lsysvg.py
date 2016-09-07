@@ -1,18 +1,20 @@
 import sys
 import getopt
 import json
-#import pprint
+import pprint
 
 from lsysparse import lsystem
 from pathstack import PathStack
 from svgpathwriter import SvgPathWriter
 from svgwriter import SvgWriter
 
+debug = False
+
 def usage():
     print "lsysvg -input input_filename -output output_filename"
 
 def process_grammar(configs):
-    #pp = pprint.PrettyPrinter(indent=4)
+    pp = pprint.PrettyPrinter(indent=4)
     paths = []
     system = lsystem(configs['iterations'], configs['axiom'], configs['rules'])
     stream = system.iterate()
@@ -22,6 +24,8 @@ def process_grammar(configs):
         path = path_stack.toPaths(config['angle'], config['length'],
                                   config['length_growth'],
                                   config['angle_growth'], stream)
+        if debug is True:
+            pp.pprint(path)
         paths.append(path)
 
     svg_path_writer = SvgPathWriter(name, paths)
@@ -34,8 +38,9 @@ def process_grammar(configs):
     return svgElement
 
 def main(argv):
+    global debug
     try:
-        opts, args = getopt.getopt(argv, "hio:", ["help", "input=", "output="])
+        opts, args = getopt.getopt(argv, "hio:", ["help", "input=", "output=", "debug"])
 
     except getopt.GetoptError as err:
         print err
@@ -48,11 +53,11 @@ def main(argv):
         if o in ("-h", "--help"):
             usage()
             sys.exit(0)
+        elif o in ("-d", "--debug"):
+            debug = True
         elif o in ("-i", "--input"):
-            print 'ai=' + a
             input_file = a
         elif o in ("-o", "--output"):
-            print 'ao=' + a
             output_file = a
 
     if input_file is None:

@@ -11,7 +11,7 @@ class SvgWriter():
     stroke_dash = '200.0'
     stroke_linecap = 'butt'
     stroke_linejoin = 'miter'
-    stroke_width = '4px'
+    stroke_width = '1px'
     stroke_opacity = '0.8'
     stroke_dash_offset = '0.0'
     dash_length = stroke_dash_length / 10

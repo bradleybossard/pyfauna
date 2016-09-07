@@ -8,22 +8,20 @@ from pathstack import PathStack
 from svgpathwriter import SvgPathWriter
 from svgwriter import SvgWriter
 
-
 def usage():
     print "lsysvg -input input_filename -output output_filename"
 
-def processGrammar(configs):
+def process_grammar(configs):
     #pp = pprint.PrettyPrinter(indent=4)
     paths = []
-    lindenmayerParse = lsystem(configs['iterations'], configs['axiom'],
-                               configs['rules'])
-    stream = lindenmayerParse.iterate()
+    system = lsystem(configs['iterations'], configs['axiom'], configs['rules'])
+    stream = system.iterate()
     name = configs['name']
     for config in configs['path']:
-        pathStack = PathStack()
-        path = pathStack.toPaths(config['angle'], config['length'],
-                                 config['length_growth'],
-                                 config['angle_growth'], stream)
+        path_stack = PathStack()
+        path = path_stack.toPaths(config['angle'], config['length'],
+                                  config['length_growth'],
+                                  config['angle_growth'], stream)
         paths.append(path)
 
     svgPathWriter = SvgPathWriter(name, paths)
@@ -43,8 +41,8 @@ def main(argv):
         print err
         sys.exit(2)
 
-    inputFile = None
-    outputFile = None
+    input_file = None
+    output_file = None
 
     for o, a in opts:
         if o in ("-h", "--help"):
@@ -52,31 +50,31 @@ def main(argv):
             sys.exit(0)
         elif o in ("-i", "--input"):
             print 'ai=' + a
-            inputFile = a
+            input_file = a
         elif o in ("-o", "--output"):
             print 'ao=' + a
-            outputFile = a
+            output_file = a
 
-    if inputFile == None:
+    if input_file is None:
         print "Input file missing ..."
         usage()
         sys.exit(2)
 
-    if outputFile == None:
+    if output_file is None:
         print "Output file missing ..."
         usage()
         sys.exit(2)
 
     # Read the whole input file.
     configs = {}
-    with open(inputFile, 'r') as fp:
-        inputStream = fp.read()
-        configs = json.loads(inputStream)
+    with open(input_file, 'r') as file:
+        input_stream = file.read()
+        configs = json.loads(input_stream)
 
-        svgString = processGrammar(configs)
+        svg_string = process_grammar(configs)
 
-    with open(outputFile, 'w') as fp:
-        fp.write(svgString)
+    with open(output_file, 'w') as file:
+        file.write(svg_string)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

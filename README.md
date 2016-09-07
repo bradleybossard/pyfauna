@@ -5,6 +5,12 @@ Python implementation of fauna library for generating L-Systems
 
 ![Hilbert Curve](https://rawgit.com/bradleybossard/pyfauna/master/output/hilbert-thumb.svg)
 
+## Setup
+
+    virtualenv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+
 ## Run
     python lsysvg.py --input grammars/hilbert.json --output output/hilbert.svg
 

@@ -1,11 +1,12 @@
 from lxml import etree
 
 class SvgWriter():
-  def __init__(self, paths):
+  def __init__(self, paths, config):
     self.paths = paths
+    self.config = config
 
   def createStyleElement(self, classname, stroke_dash_length):
-    fill = '#996300'
+    #fill = '#996300'
     fill_opacity = '0.2'
     stroke = '#FFA500'
     stroke_dash = '200.0'

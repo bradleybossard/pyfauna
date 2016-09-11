@@ -6,6 +6,10 @@
     "L": "c+R[]F-L[]FL-FR+",
     "R": "-LF+RFR+FL-"
   },
+  "animation_duration": "10s",
+  "fill_to": "#00cc00",
+  "fill_from": "#cccc00",
+  "fill_duration": "3s",
   "path": [
     {
       "angle": 90,
@@ -14,7 +18,7 @@
       "angle_growth": 0
     },
     {
-      "angle": 87.2,
+      "angle": 87.9,
       "length": 5,
       "length_growth": 0,
       "angle_growth": 0

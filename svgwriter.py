@@ -5,9 +5,18 @@ class SvgWriter():
     self.paths = paths
     self.config = config
 
+  def validateConfig(self):
+    if 'fill' not in self.config:
+        self.config['fill'] = 'none'
+    if 'fill_to' not in self.config:
+        self.config['fill_to'] = ''
+    if 'fill_from' not in self.config:
+        self.config['fill_from'] = ''
+    if 'fill_duration' not in self.config:
+        self.config['fill_duration'] = '10s'
+
   def createStyleElement(self, stroke_dash_length):
     classname = self.config['name']
-    #fill = '#996300'
     fill_opacity = '0.2'
     stroke = '#FFA500'
     stroke_dash = '200.0'
@@ -19,8 +28,16 @@ class SvgWriter():
     dash_length = stroke_dash_length / 10
     style = etree.Element("style")
     attributes = [];
-    #attributes.append("fill: %s;" % fill)
-    attributes.append("fill-opacity: %s;" % fill_opacity)
+    animations = []
+    class_def = ''
+    if self.config['fill_to'] == '' or self.config['fill_from'] == '':
+        attributes.append("fill: %s;" % self.config['fill'])
+    else:
+        animations.append("%s-fill %s ease-in alternate infinite" % (classname, self.config['fill_duration']))
+        class_def += " @keyframes %s-fill { from { fill: %s; } to { fill: %s; } }" %\
+                     (classname, self.config['fill_to'], self.config['fill_from'])
+
+    #attributes.append("fill-opacity: %s;" % fill_opacity)
     attributes.append("stroke: %s;" % stroke)
     attributes.append("stroke-linecap: %s;" % stroke_linecap)
     attributes.append("stroke-linejoin: %s;" % stroke_linejoin)
@@ -33,16 +50,15 @@ class SvgWriter():
     attributes.append("stroke-dashoffset: %s;" % stroke_dash_offset)
     #attributes.append("stroke-dashoffset: %s;" % stroke_dash_length)
     #attributes.append("transition: stroke-dashoffset 8s linear;")
-    animations = []
-    animations.append("%s-stroke-dashoffset 5s ease-in alternate infinite" % classname)
-    animations.append("%s-fill 3s ease-in alternate infinite" % classname)
-    animations.append("%s-stroke 3s ease-in alternate infinite" % classname)
+
+    # Causes flickering, needs work
+    #animations.append("%s-stroke-dashoffset 5s ease-in alternate infinite" % classname)
+
+    animations.append("%s-stroke 10s ease-in alternate infinite" % classname)
     attributes.append("animation: %s;" % ', '.join(animations))
 
-    # TODO: Add  prefix for each animation
-    class_def = ".%s { %s }" % (classname, ''.join(attributes))
+    class_def += ".%s { %s }" % (classname, ''.join(attributes))
     class_def += " @keyframes %s-stroke-dashoffset { from { stroke-dashoffset: %s; } to { stroke-dashoffset: 0; } }" % (classname, stroke_dash_length)
-    class_def += " @keyframes %s-fill { from { fill: %s; } to { fill: %s; } }" % (classname, '#cccc00', '#00cc00')
     class_def += " @keyframes %s-stroke { from { stroke: %s; } to { stroke: %s; } }" % (classname, '#cc0000', '#0000cc')
     style.text = class_def
     return style
@@ -86,6 +102,8 @@ class SvgWriter():
     root.set("height", str(svgHeight))
 
     path_length = self.paths[0]["length"]
+
+    self.validateConfig()
     style = self.createStyleElement(path_length)
     root.append(style)
 

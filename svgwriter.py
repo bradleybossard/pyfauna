@@ -5,7 +5,8 @@ class SvgWriter():
     self.paths = paths
     self.config = config
 
-  def createStyleElement(self, classname, stroke_dash_length):
+  def createStyleElement(self, stroke_dash_length):
+    classname = self.config['name']
     #fill = '#996300'
     fill_opacity = '0.2'
     stroke = '#FFA500'
@@ -85,14 +86,14 @@ class SvgWriter():
     root.set("height", str(svgHeight))
 
     path_length = self.paths[0]["length"]
-    style = self.createStyleElement('aqua', path_length)
+    style = self.createStyleElement(path_length)
     root.append(style)
 
     instance = etree.Element("use")
     instance.set("x", "0")
     instance.set("y", "0")
     # Need to link to classname
-    instance.set("class", "aqua")
+    instance.set("class", self.config['name'])
     instance.set("{%s}href" % xlink_url, "#" + name)
 
     root.append(instance)

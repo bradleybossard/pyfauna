@@ -4,19 +4,21 @@ from math import sqrt
 import random
 
 class SvgPathWriter():
-    def __init__(self, name, pointStacks):
+    def __init__(self, name, pointStacks, config):
         self.name = name
         self.pointStacks = pointStacks
+        self.config = config
         self.min_x = float("inf")
         self.max_x = float("-inf")
         self.min_y = float("inf")
         self.max_y = float("-inf")
 
-    def createPathAnimationElement(self, toPath, fromPath, valuesPath):
+    def createPathAnimationElement(self, toPath, fromPath, valuesPath, config):
         root = etree.Element("animate")
         root.set("attributeName", "d")
         root.set("begin", "0s")
-        root.set("dur", "10s")
+        #root.set("dur", "10s")
+        root.set("dur", config['animation_duration'])
         root.set("values", valuesPath)
         root.set("repeatCount", "indefinite")
         return root
@@ -99,7 +101,7 @@ class SvgPathWriter():
             toPath = self.renderPathData(self.pointStacks[1])
             #toPath = self.renderPathData(self.shufflePath(self.pointStacks[1]))
             valuesPath = fromPath + ';' +  toPath + ';' + fromPath + ';'
-            animationElements.append(self.createPathAnimationElement(fromPath, fromPath, valuesPath))
+            animationElements.append(self.createPathAnimationElement(fromPath, fromPath, valuesPath, self.config))
 
         pathSvg = self.createPathElement(fromPath, boundingBox[0], boundingBox[1], animationElements)
 

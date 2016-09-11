@@ -28,7 +28,7 @@ def process_grammar(configs):
             pp.pprint(path)
         paths.append(path)
 
-    svg_path_writer = SvgPathWriter(name, paths)
+    svg_path_writer = SvgPathWriter(name, paths, configs)
     svgPath = svg_path_writer.render()
     svgPaths = []
     svgPaths.append(svgPath)

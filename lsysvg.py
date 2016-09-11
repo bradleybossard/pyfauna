@@ -33,7 +33,7 @@ def process_grammar(configs):
     svgPaths = []
     svgPaths.append(svgPath)
 
-    svgWriter = SvgWriter(svgPaths)
+    svgWriter = SvgWriter(svgPaths, configs)
     svgElement = svgWriter.toSvg(name)
     return svgElement
 

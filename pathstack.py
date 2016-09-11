@@ -32,23 +32,17 @@ class PathStack():
       elif c == 'F':
         # Move forward
 
-        ang = ((angle % 360) / 180) * 3.141596;
-        #deltaX = round(lineLength * math.cos(math.radians(angle)), self.precision)
-        deltaX = round(lineLength * math.cos(ang), self.precision)
-        #deltaY = round(lineLength * math.sin(math.radians(angle)), self.precision)
-        deltaY = round(lineLength * math.sin(ang), self.precision)
+	# Revisit this once all l-systems have been added.  The three commented lines
+	# lines below represent how this calculation was made in the original working
+        # js demo, but causing a shearing effect with Hilbert.
+        deltaX = round(lineLength * math.cos(math.radians(angle)), self.precision)
+        deltaY = round(lineLength * math.sin(math.radians(angle)), self.precision)
+        #ang = ((angle % 360) / 180) * 3.141596;
+        #deltaX = round(lineLength * math.cos(ang), self.precision)
+        #deltaY = round(lineLength * math.sin(ang), self.precision)
+
         pointStack.append(self.createCommand('l', deltaX, deltaY))
         point = (round(point[0] + deltaX, self.precision), round(point[1] + deltaY, self.precision))
-
-        jsangle = ((angle % 360) / 180) * 3.141596;
-        #print(angle, jsangle)
-
-        #var ang = ((angle % 360) / 180) * Math.PI;
-        #currentPoint.x += Math.cos(ang) * length;
-        #currentPoint.y += Math.sin(ang) * length;
-        #pointStack.push( {'command': 'L',
-	#		'point': {'x': currentPoint.x, 'y': currentPoint.y },
-	#		'depth': pointStack.length } );
 
       elif c == '+':
         # rotate clockwise

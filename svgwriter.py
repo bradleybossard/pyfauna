@@ -19,7 +19,6 @@ class SvgWriter():
     classname = self.config['name']
     fill_opacity = '0.2'
     stroke = '#FFA500'
-    stroke_dash = '200.0'
     stroke_linecap = 'butt'
     stroke_linejoin = 'miter'
     stroke_width = '1px'
